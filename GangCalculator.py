@@ -209,14 +209,18 @@ def main():
 
         for i, gang in enumerate(optimal_plan):
             gang_plan_for_calc = [(v_id, required_quantities[v_id], l) 
-                                  for v_id, l in zip(gang['versions'], gang['lanes'])]
+for i, gang in enumerate(optimal_plan):
+            versions_list = ', '.join([f"{v} ({l} lanes)" for v, l in zip(gang['versions'], gang['lanes'])])
             
             # Recalculate Run Repeats for display
+            gang_plan_for_calc = [(v_id, required_quantities[v_id], l) 
+                                  for v_id, l in zip(gang['versions'], gang['lanes'])]
+            
             run_repeats = max(math.ceil(qty / lanes) for _, qty, lanes in gang_plan_for_calc if lanes > 0)
             
             setup_waste = (50 * die_repeat) / 12
             running_waste = gang['waste'] - setup_waste
-            
+
             st.markdown(f"**Gang {i+1}**")
             st.info(f"Run Repeats (Impressions): **{run_repeats}**")
             
@@ -224,11 +228,15 @@ def main():
             data = {'Version': gang['versions'], 'Lanes': gang['lanes']}
             st.table(data)
             
-            st.markdown(f"Running Waste (from labels): ${running_waste:.2f} \text{ ft}$")
-            st.markdown(f"Setup Waste (50 * DR): ${setup_waste:.2f} \text{ ft}$")
-            st.markdown(f"**Total Gang Cost: ${gang['waste']:.2f} \text{ ft}$**")
+            # --- START FIX HERE ---
+            st.markdown(f"Running Waste (from labels): **{running_waste:.2f} ft**")
+            st.markdown(f"Setup Waste (50 * DR): **{setup_waste:.2f} ft**")
+            st.markdown(f"**Total Gang Cost: {gang['waste']:.2f} ft**")
+            # --- END FIX HERE ---
+            
             st.markdown("---")
 
 
 if __name__ == "__main__":
+
     main()
