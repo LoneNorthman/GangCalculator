@@ -10,10 +10,10 @@ sys.setrecursionlimit(2000)
 # --- CORE LOGIC FUNCTIONS (REUSED) ---
 
 def generate_lane_splits(n_versions: int, max_total_lanes: int):
-    """Generates all valid ways to assign lanes (>= 1) to n_versions."""
+    """Generates all valid ways to assign lanes (>= 1) to n_versions.
+    Solo versions always use all available lanes."""
     if n_versions == 1:
-        for l in range(1, max_total_lanes + 1):
-            yield (l,)
+        yield (max_total_lanes,)
         return
 
     max_l1 = max_total_lanes - (n_versions - 1)
@@ -208,8 +208,6 @@ def main():
         st.success(f"Total Wasted Footage (Minimized): **{total_waste:.2f} ft**")
 
         for i, gang in enumerate(optimal_plan):
-            gang_plan_for_calc = [(v_id, required_quantities[v_id], l) 
-for i, gang in enumerate(optimal_plan):
             versions_list = ', '.join([f"{v} ({l} lanes)" for v, l in zip(gang['versions'], gang['lanes'])])
             
             # Recalculate Run Repeats for display
@@ -238,5 +236,4 @@ for i, gang in enumerate(optimal_plan):
 
 
 if __name__ == "__main__":
-
     main()
